@@ -31,11 +31,8 @@ export default function Navigation({ menuOpen, toggleMenu }) {
                 {/* Ha menu nyitva, akkor balra "Work" és "Contact" linkek */}
                 {menuOpen && (
                     <div className="pr-20 flex gap-6">
-                        <Link
+                        <Link href='mailto:vendler.akos@gmail.com'
                         target="_blank"
-                            href={{
-                                pathname: 'https://mailto:vendler.akos@gmail.com',
-                            }}
                         >
                             <p className="text-2xl text-white cursor-pointer select-none">Contact</p>
                         </Link>
