@@ -6,6 +6,7 @@ import Image from "next/image";
 import { gsap, wrap } from "gsap";
 import Lenis from 'lenis'; // ajánlott package
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Footer from "./components/footer";
 
 const Caslon = localFont({
   src: "./fonts/Big_Caslon_CC_Italic.otf",
@@ -30,6 +31,8 @@ export default function HomePage() {
   const descRef = useRef(null);
   const textRef = useRef(null);
   const triggerRef = useRef(null);
+  const cardsRef = useRef([]);
+  const cardSectionRef = useRef(null);
 
   // GSAP ScrollTrigger regisztráció
   useEffect(() => {
@@ -73,7 +76,7 @@ export default function HomePage() {
     };
   }, []);
 
-  
+
 
 
 
@@ -182,11 +185,11 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!textRef.current || !triggerRef.current) return;
-  
+
     const el = textRef.current;
     const originalText = el.innerText;
     const words = originalText.split(" ");
-  
+
     // statikus indexek kijelölése (pl. 30%)
     const staticIndexes = [];
     words.forEach((_, i) => {
@@ -194,7 +197,7 @@ export default function HomePage() {
         staticIndexes.push(i);
       }
     });
-  
+
     // HTML felépítése + extra space, ha statikus
     el.innerHTML = words
       .map((word, i) => {
@@ -204,20 +207,20 @@ export default function HomePage() {
         return `<span class="inline-block relative" style="display:inline-block;margin-left:20px;margin-right:20px;">${word}</span>${extraSpace}`;
       })
       .join("");
-  
+
     const spans = el.querySelectorAll("span");
     const wrapperHeight = triggerRef.current.offsetHeight;
     const startOffset = wrapperHeight * 3.5;
     const endOffset = startOffset + 600;
-  
+
     spans.forEach((span, i) => {
       const isStatic = staticIndexes.includes(i);
-  
+
       if (isStatic) {
         gsap.set(span, { x: 0, opacity: 1 });
         return;
       }
-  
+
       if (staticIndexes.includes(i - 1)) {
         const startX = gsap.utils.random(-80, -30);
         gsap.set(span, { x: 0, opacity: 1 });
@@ -234,7 +237,7 @@ export default function HomePage() {
         });
         return;
       }
-  
+
       if (staticIndexes.includes(i + 1)) {
         const endX = gsap.utils.random(30, 80);
         gsap.set(span, { x: 0, opacity: 1 });
@@ -251,7 +254,7 @@ export default function HomePage() {
         });
         return;
       }
-  
+
       const randomX = gsap.utils.random(-40, 40);
       gsap.set(span, { x: 0, opacity: 1 });
       gsap.to(span, {
@@ -267,15 +270,55 @@ export default function HomePage() {
       });
     });
   }, [loading]);
+
+
+
+  const skills = [
+    { name: "Figma", icon: "/skills/figma.svg" },
+    { name: "Adobe XD", icon: "/skills/xd.svg" },
+    { name: "Next.js", icon: "/skills/nextjs.svg" },
+    { name: "Tailwind", icon: "/skills/tailwind.svg" },
+    { name: "React", icon: "/skills/react.svg" },
+    { name: "GSAP", icon: "/skills/gsap.svg" },
+    { name: "CSS3", icon: "/skills/css.svg" },
+    { name: "HTML5", icon: "/skills/html.svg" },
+    { name: "Vercel", icon: "/skills/vercel.svg" },
+  ];
+
+
+
+  useEffect(() => {
+    if (!cardSectionRef.current) return;
+    const cards = gsap.utils.toArray(cardsRef.current);
+  
+    // Inicializáljuk a kártyákat lent, kisebb méret és skew
+    gsap.set(cards, { y: 80, scale: 0.8, skewY: 10, opacity: 0 });
+  
+    // Timeline ScrollTrigger-rel
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: cardSectionRef.current,
+        scroller: document.querySelector("body"), // ha Lenis-t használsz, lenis.el
+        start: "top-=50px center+=50px", // szekció teteje érje el viewport alját
+        end: "center top",    // a szekció alja érje el viewport tetejét
+        scrub: 0.6,           // finom visszacsatolás scrollra
+      },
+    })
+    .to(cards, {
+      y: 0,
+      scale: 1,
+      skewY: 0,
+      opacity: 1,
+      duration: 0.6,
+      ease: "power3.out",
+      stagger: 0.1,
+    });
+  }, [loading]);
   
   
   
   
-  
-  
-  
-  
-  
+
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -396,7 +439,7 @@ export default function HomePage() {
                 </div>
                 <div role="listitem" className="item">
                   <div className="item_content bg-[url('/contrast.png')]">
-                    
+
                   </div>
                 </div>
                 <div role="listitem" className="item">
@@ -426,22 +469,45 @@ export default function HomePage() {
           </div>
           <div ref={triggerRef} className=" flex items-center h-screen justify-between px-[35px] pt-64 textTrigger">
             <div className="w-2/4">
-                <h1 ref={textRef} className="text-black text-5xl font-bold w-5/6">
+              <h1 ref={textRef} className="text-black text-5xl font-bold w-5/6">
                 Driven by the sweet spot between design and development, I create sleek, responsive interfaces that feel as good as they look. Every pixel, every interaction — crafted with care to help bold ideas come alive on screen.
-                </h1>
+              </h1>
             </div>
-              <Image
-                src="/me.png"
-                width={600}
-                height={600}
-                alt="Arrow icon"
-              />
+            <Image
+              src="/me.png"
+              width={600}
+              height={600}
+              alt="Arrow icon"
+            />
           </div>
         </div>
-          <div>
-            
+        <section
+      ref={cardSectionRef}
+      className="flex gap-6 px-[35px] justify-between items-start h-[250vh]"
+    >
+      <h2 className="text-3xl text-black font-medium">My skills</h2>
+      <div className="grid grid-cols-3 gap-4">
+        {skills.map((skill, index) => (
+          <div
+            key={skill.name}
+            ref={(el) => (cardsRef.current[index] = el)}
+            className="bg-black flex items-center justify-center rounded-lg p-6 w-90 h-90"
+          >
+            <Image
+              src={skill.icon}
+              alt={skill.name}
+              width={100}
+              height={50}
+              className="object-contain"
+            />
           </div>
+        ))}
       </div>
+    </section>
+
+    
+      </div>
+      <Footer />;
     </>
   );
 }
