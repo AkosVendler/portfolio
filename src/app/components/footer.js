@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function HeroFooter() {
     return (
-        <div className="h-40vh flex flex-col justify-between rounded-t-[34px] bg-black text-white w-full">
+        <div className="h-40vh flex flex-col justify-between rounded-t-[34px] bg-black text-white w-full relative z-50">
             {/* Hero szekció */}
             <section className="flex-1 flex items-start justify-between px-[35px] box-border py-24">
                 <h1 className="text-4xl md:text-6xl font-light leading-snug max-w-2xl">

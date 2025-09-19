@@ -8,18 +8,18 @@ import { usePathname } from "next/navigation";
 export default function Navigation({ menuOpen, toggleMenu }) {
     const navRef = useRef(null);
     const pathname = usePathname(); // <<< itt tudod lekérdezni az aktuális route-ot
-    const isWorks = pathname === "/works"; // works oldalon vagy-e?
+    const isMain = pathname === "/"; // works oldalon vagy-e?
 
     useEffect(() => {
         const tl = gsap.timeline();
-        const delay = isWorks ? 0.1 : 3.2; // works oldalon rövidebb delay
+        const delay = isMain ? 3.2  : 0.1; // works oldalon rövidebb delay
 
         tl.fromTo(
             navRef.current,
             { opacity: 0, y: -70 },
             { y: 0, opacity: 1, duration: 1.5, ease: "power4.inOut", delay }
         );
-    }, [isWorks]);
+    }, [isMain]);
 
     return (
         <div
@@ -35,7 +35,7 @@ export default function Navigation({ menuOpen, toggleMenu }) {
                 <p
                     className="text-2xl font-[700]"
                     style={{
-                        color: menuOpen ? "white" : isWorks ? "black" : "white",
+                        color: menuOpen ? "white" : isMain ? "white" : "black",
                     }}
                 >
                     Motion Studio.
@@ -75,7 +75,7 @@ export default function Navigation({ menuOpen, toggleMenu }) {
                     className="text-2xl cursor-pointer select-none"
                     onClick={toggleMenu}
                     style={{
-                        color: menuOpen ? "white" : isWorks ? "black" : "white",
+                        color: menuOpen ? "white" : isMain ? "white" : "black",
                     }}
                 >
                     {menuOpen ? "Close" : "Menu"}

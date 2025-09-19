@@ -7,6 +7,7 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import Lenis from 'lenis'; // ajánlott package
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Link from "next/link";
 
 
 
@@ -133,61 +134,61 @@ export default function Works() {
 
     useEffect(() => {
         if (loading) return;
-      
+
         // Első sor animáció
         // Első sor
-gsap.fromTo(
-    firstRowRef.current,
-    { y: 100, opacity: 0, scale: 0.95, filter: "blur(10px)" },
-    {
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      filter: "blur(0px)",
-      duration: 1.2,
-      ease: "power4.out",
-      stagger: 0.2,
-      scrollTrigger: {
-        trigger: firstRowRef.current[0],
-        start: "top 80%",
-        end: "top 50%",
-        scrub: false,
-      },
-    }
-  );
-  
-  // Második sor
-// Második sor animáció
-gsap.fromTo(
-    secondRowRef.current,
-    {
-      y: 100,
-      opacity: 0,
-      scale: 0.95,
-      filter: "blur(10px)",
-    },
-    {
-      y: 0,
-      opacity: 1,
-      scale: 1,
-      filter: "blur(0px)",
-      duration: 1.2,
-      ease: "power4.out",
-      stagger: 0.2,
-      scrollTrigger: {
-        trigger: secondRowRef.current[0], // első kártya a sorból
-        start: "top 85%", // amikor a sor 85%-a a viewport topjához ér
-        end: "top 50%",
-        scrub: true,
-        markers: false,
-      },
-    }
-  );
-  
-  
-          
-      }, [loading]);
-      
+        gsap.fromTo(
+            firstRowRef.current,
+            { y: 100, opacity: 0, scale: 0.95, filter: "blur(10px)" },
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                filter: "blur(0px)",
+                duration: 1.2,
+                ease: "power4.out",
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: firstRowRef.current[0],
+                    start: "top 80%",
+                    end: "top 50%",
+                    scrub: false,
+                },
+            }
+        );
+
+        // Második sor
+        // Második sor animáció
+        gsap.fromTo(
+            secondRowRef.current,
+            {
+                y: 100,
+                opacity: 0,
+                scale: 0.95,
+                filter: "blur(10px)",
+            },
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                filter: "blur(0px)",
+                duration: 1.2,
+                ease: "power4.out",
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: secondRowRef.current[0], // első kártya a sorból
+                    start: "top 85%", // amikor a sor 85%-a a viewport topjához ér
+                    end: "top 50%",
+                    scrub: true,
+                    markers: false,
+                },
+            }
+        );
+
+
+
+    }, [loading]);
+
 
     if (loading) {
         return (
@@ -223,24 +224,27 @@ gsap.fromTo(
                         {/* Első sor */}
                         <div className="w-full h-screen flex items-center gap-10 relative top-[-100px]">
                             {[0, 1].map((i) => (
-                                <div
+                                <Link
                                     key={i}
-                                    ref={(el) => (firstRowRef.current[i] = el)}
+                                    href={i === 0 ? "/contrast" : "/lumero"}
                                     className="w-2/4 h-5/7 bg-[#0A0908] rounded-[34px] p-5 pb-20 box-border"
+                                    ref={(el) => (firstRowRef.current[i] = el)}
                                 >
                                     <div className="w-full h-full relative rounded-[20px] overflow-hidden">
                                         <Image
                                             src={i === 0 ? "/contrastabout.png" : "/lumero.png"}
-                                            alt="Picture of the author"
+                                            alt={i === 0 ? "Contrast site" : "Lumero site"}
                                             fill
                                             style={{ objectFit: "cover", borderRadius: "20px" }}
                                         />
                                     </div>
                                     <div className="w-full h-[70px] flex justify-between items-center">
-                                        <p className="font-[500] text-2xl">{i === 0 ? "Contrast site" : "Lumero site"}</p>
+                                        <p className="font-[500] text-2xl">
+                                            {i === 0 ? "Contrast site" : "Lumero site"}
+                                        </p>
                                         <p className="font-[500] text-2xl">2025</p>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
 
