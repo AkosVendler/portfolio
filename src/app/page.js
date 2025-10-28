@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import Navigation from "./components/navigation";
 import localFont from "next/font/local";
+import Link from "next/link";
 import Image from "next/image";
 import { gsap, wrap } from "gsap";
 import Lenis from 'lenis'; // ajánlott package
@@ -103,25 +104,28 @@ export default function HomePage() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-
+  
     const scrollWrappers = document.querySelectorAll(".scroll-wrapper");
-
+  
     scrollWrappers.forEach((wrapper) => {
       const section = wrapper.querySelector(".scroll-section");
       const items = section.querySelectorAll(".item");
-
-      const totalHeight = items.length * window.innerHeight;
+  
+      // Responsive magasság
+      const isMobile = window.innerWidth <= 425;
+      const itemHeight = isMobile ? window.innerHeight * 0.7 : window.innerHeight; // mobilon 60%-os magasság
+      const totalHeight = items.length * itemHeight;
       wrapper.style.height = `${totalHeight}px`;
-
+  
       // Állítsuk be: az első elem legyen lent (látható), a többiek legyenek teljesen lent (ki vannak tolva)
       items.forEach((item, index) => {
         if (index !== 0) {
           gsap.set(item, { yPercent: 100 });
         } else {
-          gsap.set(item, { yPercent: 0 }); // az első látszik
+          gsap.set(item, { yPercent: 0 });
         }
       });
-
+  
       // Pin a wrapper
       ScrollTrigger.create({
         trigger: wrapper,
@@ -131,7 +135,7 @@ export default function HomePage() {
         scrub: true,
         //markers: true,
       });
-
+  
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: wrapper,
@@ -142,20 +146,19 @@ export default function HomePage() {
         },
         defaults: { ease: "none" },
       });
-
-      // Animáció: az első elem kicsit skálázódik, majd a többi jön fel sorban
+  
       items.forEach((item, index) => {
         timeline.to(item, {
           scale: 0.9,
           borderRadius: "34px",
           duration: 0.5,
         });
-
+  
         if (index + 1 < items.length) {
           timeline.to(
             items[index + 1],
             {
-              yPercent: 0, // a következő elem jön fel
+              yPercent: 0,
               duration: 0.5,
             },
             "<"
@@ -164,6 +167,7 @@ export default function HomePage() {
       });
     });
   }, [loading]);
+  
 
 
 
@@ -185,6 +189,8 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!textRef.current || !triggerRef.current) return;
+
+    if (window.innerWidth <= 425) return;
 
     const el = textRef.current;
     const originalText = el.innerText;
@@ -290,10 +296,10 @@ export default function HomePage() {
   useEffect(() => {
     if (!cardSectionRef.current) return;
     const cards = gsap.utils.toArray(cardsRef.current);
-  
+
     // Inicializáljuk a kártyákat lent, kisebb méret és skew
     gsap.set(cards, { y: 80, scale: 0.8, skewY: 10, opacity: 0 });
-  
+
     // Timeline ScrollTrigger-rel
     gsap.timeline({
       scrollTrigger: {
@@ -304,20 +310,30 @@ export default function HomePage() {
         scrub: 0.6,           // finom visszacsatolás scrollra
       },
     })
-    .to(cards, {
-      y: 0,
-      scale: 1,
-      skewY: 0,
-      opacity: 1,
-      duration: 0.6,
-      ease: "power3.out",
-      stagger: 0.1,
-    });
+      .to(cards, {
+        y: 0,
+        scale: 1,
+        skewY: 0,
+        opacity: 1,
+        duration: 0.6,
+        ease: "power3.out",
+        stagger: 0.1,
+      });
   }, [loading]);
-  
-  
-  
-  
+
+
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.backgroundColor = "black";
+    } else {
+      document.body.style.backgroundColor = "";
+    }
+
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [menuOpen]);
 
 
   const toggleMenu = () => {
@@ -358,7 +374,7 @@ export default function HomePage() {
       <Navigation menuOpen={menuOpen} toggleMenu={toggleMenu} NavActive={NavActive} />
 
       <main
-        className="relative transition-all duration-300"
+        className="relative transition-all duration-300 bg-black"
         style={{
           marginRight: menuOpen ? "1.5rem" : undefined,
           marginLeft: menuOpen ? "1.5rem" : undefined,
@@ -374,102 +390,113 @@ export default function HomePage() {
           }}
           className="background bg-[url('/background.jpg')] bg-cover bg-center h-[130vh] w-full"
         >
-          <div className="w-full h-screen flex items-end px-[35px] flex-col justify-center gap-10">
-            <div className="flex items-center gap-48">
+          <div className="w-full h-screen flex items-end px-[35px] flex-col justify-center 2xl:gap-10 min-[320px]:gap-6">
+            <div className="flex items-center 2xl:gap-48 lg:gap-48 md:gap-48 min-[425px]:gap-16 min-[320px]:gap-12">
               <h1 ref={websitesRef} onMouseEnter={() => handleMouseEnter(websitesRef)}
-                onMouseLeave={() => handleMouseLeave(websitesRef)} className="text-white text-9xl font-[300] cursor-pointer">
+                onMouseLeave={() => handleMouseLeave(websitesRef)} className="text-white 2xl:text-9xl lg:text-8xl md:text-7xl min-[425px]:text-4xl min-[320px]:text-2xl font-[300] cursor-pointer">
                 WEBSITES
               </h1>
               <h1 ref={thatRef} onMouseEnter={() => handleMouseEnter(thatRef)}
-                onMouseLeave={() => handleMouseLeave(thatRef)} className="text-white text-9xl font-[300] cursor-pointer">
+                onMouseLeave={() => handleMouseLeave(thatRef)} className="text-white 2xl:text-9xl lg:text-8xl md:text-7xl min-[425px]:text-4xl min-[320px]:text-2xl font-[300] cursor-pointer">
                 THAT
               </h1>
             </div>
             <div className="flex items-center justify-between w-full">
               <h1 ref={dontJustRef} onMouseEnter={() => handleMouseEnter(dontJustRef)}
-                onMouseLeave={() => handleMouseLeave(dontJustRef)} className="text-white text-9xl font-[300] cursor-pointer">
+                onMouseLeave={() => handleMouseLeave(dontJustRef)} className="text-white 2xl:text-9xl lg:text-8xl md:text-7xl min-[425px]:text-4xl min-[320px]:text-2xl font-[300] cursor-pointer">
                 DON’T JUST
               </h1>
               <h1
                 ref={workRef}
                 onMouseEnter={() => handleMouseEnter(workRef)}
                 onMouseLeave={() => handleMouseLeave(workRef)}
-                className={`${Caslon.className} text-white text-9xl font-[300] cursor-pointer`}
+                className={`${Caslon.className} text-white 2xl:text-9xl lg:text-8xl md:text-7xl min-[425px]:text-4xl min-[320px]:text-2xl font-[300] cursor-pointer`}
               >
                 WORK —
               </h1>
             </div>
             <div className="flex items-center gap-6">
-              <Image ref={smileRef} onMouseEnter={() => handleMouseEnter(smileRef)}
-                onMouseLeave={() => handleMouseLeave(smileRef)}
-                src="/sticker.svg"
-                width={100}
-                height={100}
-                alt="Picture of the author"
-                style={{ cursor: "pointer" }}
+              <div className="relative 2xl:w-[100px] 2xl:h-[100px] md:w-[80px] md:h-[80px] min-[425px]:w-[40px] min-[425px]:h-[40px] min-[320px]:w-[30px] min-[320px]:h-[30px]">
+                <Image
+                  ref={smileRef}
+                  onMouseEnter={() => handleMouseEnter(smileRef)}
+                  onMouseLeave={() => handleMouseLeave(smileRef)}
+                  src="/sticker.svg"
+                  alt="Picture of the author"
+                  fill
+                  style={{ objectFit: 'contain', cursor: 'pointer' }}
+                />
+              </div>
 
-              />
               <h1 ref={theyRef} onMouseEnter={() => handleMouseEnter(theyRef)}
-                onMouseLeave={() => handleMouseLeave(theyRef)} className="text-white text-9xl font-[300] cursor-pointer">
+                onMouseLeave={() => handleMouseLeave(theyRef)} className="text-white 2xl:text-9xl lg:text-8xl md:text-7xl min-[425px]:text-4xl min-[320px]:text-2xl font-[300] cursor-pointer">
                 THEY
               </h1>
               <h1
                 ref={wowRef} onMouseEnter={() => handleMouseEnter(wowRef)}
                 onMouseLeave={() => handleMouseLeave(wowRef)}
-                className={`${Caslon.className} text-white text-9xl font-[300] cursor-pointer`}
+                className={`${Caslon.className} text-white 2xl:text-9xl lg:text-8xl md:text-7xl min-[425px]:text-4xl min-[320px]:text-2xl font-[300] cursor-pointer`}
               >
                 WOW
               </h1>
             </div>
           </div>
-          <h1 ref={descRef} className="w-96 relative pl-[35px] text-white top-[-150px]">
+          <h1 ref={descRef} className="2xl:w-96 min-[425px]:w-72 min-[320px]:w-64 relative pl-[35px] text-white top-[-150px]">
             I design and build websites that are fun to use, nice to look at, and don’t make your brain hurt. Think of me as the guy who turns “just a website” into “wait, this is kinda cool.”
           </h1>
         </div>
       </main>
       <div className=" top-28 w-full bg-white">
         <div className="scroll-wrapper">
-          <h1 className="text-black text-[12rem] pt-50 uppercase font-[700] text-center">My Projects</h1>
+          <h1 className="text-black 2xl:text-[12rem] xl:text-[10rem] lg:text-[9rem] md:text-9xl min-[425px]:text-5xl min-[320px]:text-4xl pt-50 uppercase font-[700] text-center">My Projects</h1>
           <div className="scroll-section vertical-section section">
             <div className="wrapper">
               <div role="list" className="list">
-                <div role="listitem" className="item border-2">
-                  <div className="item_content bg-[url('/lumero.png')]">
+                {["/lumero.png", "/contrast.png", "/barber.png", "/nolta.png"].map((img, i) => (
+                  <div
+                    key={i}
+                    role="listitem"
+                    className="item border-2 flex justify-center items-center max-[425px]:bg-black"
+                  >
+                    <div className="relative bg-black w-full h-full 2xl:w-full 2xl:h-full md:w-[400px] md:h-[400px] sm:w-[300px] sm:h-[300px]">
+                      <Image
+                        src={img}
+                        alt={`Project ${i}`}
+                        fill
+                        style={{ objectFit: 'contain', objectPosition: 'center' }}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div role="listitem" className="item">
-                  <div className="item_content bg-[url('/contrast.png')]">
-
-                  </div>
-                </div>
-                <div role="listitem" className="item">
-                  <div className="item_content bg-[url('/barber.png')]">
-                  </div>
-                </div>
-                <div role="listitem" className="item">
-                  <div className="item_content bg-no-repeat bg-cover bg-[url('/nolta.png')]">
-                  </div>
-                </div>
+                ))}
               </div>
+
+
+
             </div>
           </div>
-          <div
-            className="flex items-center justify-center gap-3 cursor-pointer"
+          <div className="flex items-center justify-center cursor-pointer md:mb-96">
+            <Link href="/works">
+              <span className="inline-flex items-center gap-3 relative group">
 
-          >
-            <h1 className="text-center text-black text-4xl font-normal">
-              See all
-            </h1>
-            <Image
-              src="/arrow.svg"
-              width={35}
-              height={35}
-              alt="Arrow icon"
-            />
+                {/* Underline */}
+                <span className="absolute -bottom-1 left-0 h-[2px] bg-black w-0 transition-all duration-500 ease-out group-hover:w-full"></span>
+
+                <span className="text-black text-4xl font-normal">
+                  See all
+                </span>
+
+                <Image
+                  src="/arrow.svg"
+                  width={35}
+                  height={35}
+                  alt="Arrow icon"
+                />
+              </span>
+            </Link>
           </div>
-          <div ref={triggerRef} className=" flex items-center h-screen justify-between px-[35px] pt-64 textTrigger">
-            <div className="w-2/4">
-              <h1 ref={textRef} className="text-black text-5xl font-bold w-5/6">
+          <div ref={triggerRef} className=" flex 2xl:flex-row md:flex-col-reverse min-[425px]:flex-col-reverse min-[320px]:flex-col-reverse items-center h-screen justify-between px-[35px] pt-64 textTrigger">
+            <div className="2xl:w-2/4 lg:w-3/4 md:w-4/4 min-[425px]:w-4/4 2xl:flex-none md:flex md:items-center md:justify-center md:gap-4 min-[425px]:flex min-[425px]:items-center min-[425px]:justify-center min-[425px]:gap-4">
+              <h1 ref={textRef} className="text-black 2xl:text-5xl lg:text-4xl md:text-5xl min-[425px]:text-xl 2xl:text-left md:text-center font-bold w-5/6 xl:w-full">
                 Driven by the sweet spot between design and development, I create sleek, responsive interfaces that feel as good as they look. Every pixel, every interaction — crafted with care to help bold ideas come alive on screen.
               </h1>
             </div>
@@ -482,30 +509,31 @@ export default function HomePage() {
           </div>
         </div>
         <section
-      ref={cardSectionRef}
-      className="flex gap-6 px-[35px] justify-between items-start h-[250vh]"
-    >
-      <h2 className="text-3xl text-black font-medium">My skills</h2>
-      <div className="grid grid-cols-3 gap-4">
-        {skills.map((skill, index) => (
-          <div
-            key={skill.name}
-            ref={(el) => (cardsRef.current[index] = el)}
-            className="bg-black flex items-center justify-center rounded-lg p-6 w-90 h-90"
-          >
-            <Image
-              src={skill.icon}
-              alt={skill.name}
-              width={100}
-              height={50}
-              className="object-contain"
-            />
+          ref={cardSectionRef}
+          className="flex 2xl:flex-row min-[425px]:flex-col min-[320px]:flex-col gap-6 px-[35px] 2xl:justify-between items-start 2xl:h-[250vh] lg:h-[150vh] md:h-[150vh] min-[425px]:h-[100vh] min-[320px]:h-[100vh]"
+        >
+          <h2 className="text-5xl text-black font-medium">My skills</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {skills.map((skill, index) => (
+              <div
+                key={skill.name}
+                ref={(el) => (cardsRef.current[index] = el)}
+                className="bg-black flex items-center justify-center rounded-lg p-6 2xl:w-90 2xl:h-90 lg:w-64 lg:h-64 md:w-52 md:h-52 min-[425px]:w-28 min-[425px]:h-28 min-[320px]:w-20 min-[320px]:h-20"
+              >
+                <div className="relative 2xl:w-[70px] 2xl:h-[70px] lg:w-[50px] lg:h-[50px] md:w-[60px] md:h-[60px] min-[425px]:w-20 min-[425px]:h-20 min-[320px]:w-20 min-[320px]:h-20">
+                  <Image
+                    src={skill.icon}
+                    alt={skill.name}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        </section>
 
-    
+
       </div>
       <Footer />;
     </>

@@ -44,9 +44,9 @@ export default function Navigation({ menuOpen, toggleMenu }) {
                 
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center 2xl:gap-6 min-[320px]:gap-2">
                 {menuOpen && (
-                    <div className="pr-20 flex gap-6">
+                    <div className="2xl:pr-20 min-[320px]:pr-6 flex 2xl:gap-6 min-[320px]:gap-2">
                         <Link href="mailto:vendler.akos@gmail.com" target="_blank">
                             <p
                                 className="text-2xl cursor-pointer select-none"
