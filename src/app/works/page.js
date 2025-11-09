@@ -200,92 +200,92 @@ export default function Works() {
 
     return (
         <>
-            <Navigation menuOpen={menuOpen} toggleMenu={toggleMenu} NavActive={NavActive} />
-            <div className="relative transition-all duration-300"
-                style={{
-                    marginRight: menuOpen ? "1.5rem" : undefined,
-                    marginLeft: menuOpen ? "1.5rem" : undefined,
-                    transform: menuOpen ? "translate(0px, 9.5rem)" : undefined,
-                    borderTopLeftRadius: menuOpen ? "34px" : undefined,
-                    borderTopRightRadius: menuOpen ? "34px" : undefined,
-                }}
+          <Navigation menuOpen={menuOpen} toggleMenu={toggleMenu} NavActive={NavActive} />
+      
+          {/* Külső fekete wrapper */}
+          <div className="w-full bg-black transition-all duration-300">
+      
+            {/* Eredeti fehér tartalom */}
+            <div
+              className="relative transition-all duration-300"
+              style={{
+                marginRight: menuOpen ? "1.5rem" : undefined,
+                marginLeft: menuOpen ? "1.5rem" : undefined,
+                transform: menuOpen ? "translate(0px, 9.5rem)" : undefined,
+                borderTopLeftRadius: menuOpen ? "34px" : undefined,
+                borderTopRightRadius: menuOpen ? "34px" : undefined,
+              }}
             >
-                <div className="h-[400vh] w-full bg-white"
-                    style={{
-                        borderTopLeftRadius: menuOpen ? "34px" : undefined,
-                        borderTopRightRadius: menuOpen ? "34px" : undefined,
-                    }}
-                >
-                    <div className="pt-48 px-[34px] flex flex-col ">
-                        <div className="">
-                            <h1 ref={workRef} className="uppercase text-black font-[700] text-9xl">Work</h1>
+              <div
+                className="h-[300vh] w-full bg-white"
+                style={{
+                  borderTopLeftRadius: menuOpen ? "34px" : undefined,
+                  borderTopRightRadius: menuOpen ? "34px" : undefined,
+                }}
+              >
+                <div className="pt-48 px-[34px] flex flex-col ">
+                  <div className="">
+                    <h1 ref={workRef} className="uppercase text-black font-[700] 2xl:text-9xl max-[500px]: text-8xl">
+                      Work
+                    </h1>
+                  </div>
+      
+                  {/* Kártya Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mt-20">
+                    {[0, 1, 2, 3].map((i) => (
+                      <Link
+                        key={i}
+                        href={i === 0 ? "/contrast" : i === 1 ? "/lumero" : "#"}
+                        ref={(el) =>
+                          i < 2
+                            ? (firstRowRef.current[i] = el)
+                            : (secondRowRef.current[i - 2] = el)
+                        }
+                        className="
+                          w-full rounded-[34px] p-5 bg-[#0A0908]
+                          h-[300px] sm:h-[380px] md:h-[450px] lg:h-[620px]
+                          flex flex-col justify-between box-border
+                        "
+                      >
+                        {/* Kép */}
+                        <div className="relative w-full flex-1 rounded-[20px] overflow-hidden">
+                          <Image
+                            src={i === 0 || i === 2 ? "/contrastabout.png" : "/lumero.png"}
+                            alt="Work project"
+                            fill
+                            className="object-cover rounded-[20px]"
+                          />
                         </div>
-
-                        {/* Első sor */}
-                        <div className="w-full h-screen flex items-center gap-10 relative top-[-100px]">
-                            {[0, 1].map((i) => (
-                                <Link
-                                    key={i}
-                                    href={i === 0 ? "/contrast" : "/lumero"}
-                                    className="w-2/4 h-5/7 bg-[#0A0908] rounded-[34px] p-5 pb-20 box-border"
-                                    ref={(el) => (firstRowRef.current[i] = el)}
-                                >
-                                    <div className="w-full h-full relative rounded-[20px] overflow-hidden">
-                                        <Image
-                                            src={i === 0 ? "/contrastabout.png" : "/lumero.png"}
-                                            alt={i === 0 ? "Contrast site" : "Lumero site"}
-                                            fill
-                                            style={{ objectFit: "cover", borderRadius: "20px" }}
-                                        />
-                                    </div>
-                                    <div className="w-full h-[70px] flex justify-between items-center">
-                                        <p className="font-[500] text-2xl">
-                                            {i === 0 ? "Contrast site" : "Lumero site"}
-                                        </p>
-                                        <p className="font-[500] text-2xl">2025</p>
-                                    </div>
-                                </Link>
-                            ))}
+      
+                        {/* Text + Date */}
+                        <div className="w-full h-[60px] flex justify-between items-center text-white mt-4">
+                          <p className="font-[500] text-xl sm:text-2xl">
+                            {i === 0 || i === 2 ? "Contrast site" : "Lumero site"}
+                          </p>
+                          <p className="font-[500] text-xl sm:text-2xl">
+                            2025
+                          </p>
                         </div>
-
-                        {/* Második sor */}
-                        <div className="w-full h-screen flex items-start gap-10 relative top-[-180px]">
-                            {[2, 3].map((i) => (
-                                <div
-                                    key={i}
-                                    ref={(el) => (secondRowRef.current[i - 2] = el)}
-                                    className="w-2/4 h-5/7 bg-[#0A0908] rounded-[34px] p-5 pb-20 box-border"
-                                >
-                                    <div className="w-full h-full relative rounded-[20px] overflow-hidden">
-                                        <Image
-                                            src={i === 2 ? "/contrastabout.png" : "/lumero.png"}
-                                            alt="Picture of the author"
-                                            fill
-                                            style={{ objectFit: "cover", borderRadius: "20px" }}
-                                        />
-                                    </div>
-                                    <div className="w-full h-[70px] flex justify-between items-center">
-                                        <p className="font-[500] text-2xl">{i === 2 ? "Contrast site" : "Lumero site"}</p>
-                                        <p className="font-[500] text-2xl">2025</p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                    </div>
-
-                    {/* 👇 animált szöveg */}
-                    <div className="flex items-center justify-center h-1/4">
-                        <h1
-                            ref={textRef}
-                            className="text-black font-[600] text-9xl"
-                        >
-                            Let yours be here too
-                        </h1>
-                    </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
+      
+                {/* Animált szöveg */}
+                <div className="flex items-center justify-center h-1/4">
+                  <h1
+                    ref={textRef}
+                    className="text-black font-[600] 2xl:text-9xl lg:text-9xl md:text-7xl text-center max-[500px]:text-4xl max-[500px]:text-center"
+                  >
+                    Let yours be here too
+                  </h1>
+                </div>
+              </div>
             </div>
-            <Footer />
+          </div>
+      
+          <Footer />
         </>
-    )
+      )
+      
 } 

@@ -12,7 +12,7 @@ export default function Navigation({ menuOpen, toggleMenu }) {
 
     useEffect(() => {
         const tl = gsap.timeline();
-        const delay = isMain ? 3.2  : 0.1; // works oldalon rövidebb delay
+        const delay = isMain ? 3.2 : 0.1; // works oldalon rövidebb delay
 
         tl.fromTo(
             navRef.current,
@@ -26,30 +26,41 @@ export default function Navigation({ menuOpen, toggleMenu }) {
             ref={navRef}
             className="w-full absolute z-10 flex items-center justify-between px-[35px]"
             style={{
-                backgroundColor: menuOpen ? "black" : "transparent", // menü nyitva fekete bg
+                backgroundColor: "transparent", // menü nyitva fekete bg
                 transition: "background-color 0.3s ease",
             }}
         >
             <div className="flex items-center gap-15 h-[150px]">
                 <Link href="/">
-                <p
-                    className="text-2xl font-[700]"
-                    style={{
-                        color: menuOpen ? "white" : isMain ? "white" : "black",
-                    }}
-                >
-                    Motion Studio.
-                </p>
+                    {/* Desktop: mindig szöveg */}
+                    {/* Mobile: ha nincs menü → szöveg, ha menü → karika */}
+                    {(!menuOpen || window.innerWidth >= 640) && (
+                        <p
+                            className="text-2xl font-[700]"
+                            style={{
+                                color: menuOpen ? "white" : isMain ? "white" : "black"
+                            }}
+                        >
+                            Motion Studio.
+                        </p>
+                    )}
+
+                    {(menuOpen && window.innerWidth < 640) && (
+                        <div
+                            className="w-8 h-8 rounded-full bg-white"
+                        />
+                    )}
                 </Link>
-                
+
             </div>
+
 
             <div className="flex items-center 2xl:gap-6 min-[320px]:gap-2">
                 {menuOpen && (
-                    <div className="2xl:pr-20 min-[320px]:pr-6 flex 2xl:gap-6 min-[320px]:gap-2">
+                    <div className="2xl:pr-16 min-[320px]:pr-6 flex 2xl:gap-10 min-[320px]:gap-2">
                         <Link href="mailto:vendler.akos@gmail.com" target="_blank">
                             <p
-                                className="text-2xl cursor-pointer select-none"
+                                className="text-2xl max-sm:text-2xl cursor-pointer select-none"
                                 style={{
                                     color: "white",
                                 }}

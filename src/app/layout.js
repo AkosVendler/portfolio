@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.css";
+import { Analytics } from '@vercel/analytics/next';
 
 const Neue = localFont({
   src: [
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${Haas.variable} antialiased`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );

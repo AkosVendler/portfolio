@@ -14,7 +14,7 @@ export default function HeroFooter() {
             </section>
 
             {/* Footer */}
-            <footer className="border-t border-gray-700 p-6 flex flex-col md:flex-row justify-between items-end text-sm">
+            <footer className="border-t border-gray-700 p-6 flex flex-col md:flex-row justify-between items-left text-sm">
                 <span>HUNGARY</span>
                 <span>ALL RIGHTS RESERVED © 2025 Motion Studio.</span>
             </footer>

@@ -458,7 +458,7 @@ export default function HomePage() {
                     role="listitem"
                     className="item border-2 flex justify-center items-center max-[425px]:bg-black"
                   >
-                    <div className="relative bg-black w-full h-full 2xl:w-full 2xl:h-full md:w-[400px] md:h-[400px] sm:w-[300px] sm:h-[300px]">
+                    <div className="relative bg-black w-full h-full 2xl:w-full 2xl:h-full lg:w-full lg:h-full md:w-[400px] md:h-[400px] sm:w-[300px] sm:h-[300px]">
                       <Image
                         src={img}
                         alt={`Project ${i}`}
@@ -535,7 +535,7 @@ export default function HomePage() {
 
 
       </div>
-      <Footer />;
+      <Footer />
     </>
   );
 }
